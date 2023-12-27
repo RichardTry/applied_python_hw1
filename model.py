@@ -43,12 +43,31 @@ def prepare_data():
                           'REG_ADDRESS_PROVINCE',
                           'POSTAL_ADDRESS_PROVINCE',
                           'FACT_ADDRESS_PROVINCE'])
-    df = pd.get_dummies(df, columns=['EDUCATION', 'MARITAL_STATUS', 'FAMILY_INCOME'])
+    # df = pd.get_dummies(df, columns=['EDUCATION', 'MARITAL_STATUS', 'FAMILY_INCOME'])
     print(df.iloc[0])
     return df
 
 def open_data():
     return prepare_data()
+
+def preprocess_data(df: pd.DataFrame, test=True):
+    df.dropna(inplace=True)
+
+    if test:
+        X_df, y_df = split_data(df)
+    else:
+        X_df = df
+
+    to_encode = ['EDUCATION', 'MARITAL_STATUS', 'FAMILY_INCOME']
+    for col in to_encode:
+        dummy = pd.get_dummies(X_df[col], prefix=col)
+        X_df = pd.concat([X_df, dummy], axis=1)
+        X_df.drop(col, axis=1, inplace=True)
+
+    if test:
+        return X_df, y_df
+    else:
+        return X_df
 
 def split_data(df: pd.DataFrame):
     y = df['TARGET']
@@ -57,9 +76,16 @@ def split_data(df: pd.DataFrame):
     return X, y
 
 
+def train_model():
+    pass
+
+
 def load_model_and_predict(df, path="data/model_weights.mw"):
-    with open(path, "rb") as file:
-        model = load(file)
+    if path is not None:
+        with open(path, "rb") as file:
+            model = load(file)
+    else:
+        model = train_model()
 
     prediction = model.predict(df)[0]
     # prediction = np.squeeze(prediction)

@@ -1,6 +1,6 @@
 import pandas as pd
 import streamlit as st
-from model import open_data, split_data, load_model_and_predict #, preprocess_data, split_data, load_model_and_predict
+from model import open_data, split_data, load_model_and_predict, preprocess_data
 
 def process_main_page():
     show_main_page()
@@ -11,13 +11,13 @@ def show_main_page():
     st.set_page_config(
         layout="wide",
         initial_sidebar_state="auto",
-        page_title="Demo Titanic",
+        page_title="Applied Python HW 1",
     )
 
     st.write(
         """
-        # Классификация пассажиров титаника
-        Находим склонность клиента к положительному или отрицательному отклику на предложение банка.
+        # Склонность клиента к отклику на предложение банка
+        Делаем разведочный анализ данных о клиентах, чтобы найти их склонность к положительному или отрицательному отклику на предложение банка.
         """
     )
 
@@ -47,8 +47,8 @@ def process_side_bar_inputs():
     user_X_df = preprocessed_X_df[:1]
     write_user_data(user_X_df)
 
-    prediction, prediction_probas = load_model_and_predict(user_X_df)
-    write_prediction(prediction, prediction_probas)
+    # prediction, prediction_probas = load_model_and_predict(user_X_df, path=None)
+    # write_prediction(prediction, prediction_probas)
 
 
 def sidebar_input_features():
